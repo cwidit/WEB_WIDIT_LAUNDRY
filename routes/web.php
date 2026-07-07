@@ -62,6 +62,11 @@ Route::middleware(['auth', 'role:Administrator,Operator'])->group(function () {
     Route::resource('transaction', TransOrderController::class);
     Route::put('transaction/status/{id}', [TransOrderController::class, 'updateStatus'])->name('transaction.updateStatus');
     Route::get('/transaction/{id}/print', [\App\Http\Controllers\TransOrderController::class, 'printInvoice'])->name('transaction.print');
+    
+    // Rute Pickup Laundry
+    Route::get('pickup', [TransOrderController::class, 'pickupIndex'])->name('transaction.pickup.index');
+    Route::get('pickup/{id}', [TransOrderController::class, 'pickupShow'])->name('transaction.pickup.show');
+    Route::post('pickup/{id}', [TransOrderController::class, 'pickupProcess'])->name('transaction.pickup.process');
 });
 
 // --------------------------------------------------------

@@ -178,4 +178,91 @@ class TransOrderController extends Controller
 
         return redirect()->route('transaction.show', $id)->with('success', 'Status transaksi berhasil diperbarui.');
     }
+
+    public function pickupIndex()
+    {
+        // Siap Diambil: order_status = 2 (Selesai)
+        $ready_orders = TransOrder::with(['customer', 'details'])
+            ->where('order_status', 2)
+            ->orderBy('id', 'desc')
+            ->get();
+
+        // Riwayat Pengambilan: data dari trans_laundry_pickup
+        $pickup_history = \App\Models\TransLaundryPickup::with(['order', 'customer'])
+            ->orderBy('id', 'desc')
+            ->get();
+
+        return view('transaction.pickup_index', compact('ready_orders', 'pickup_history'));
+    }
+
+    public function pickupShow($id)
+    {
+        $order = TransOrder::with(['customer', 'details.typeOfService'])->findOrFail($id);
+        
+        // Hanya izinkan order berstatus 2 (Selesai) untuk dipickup
+        if ($order->order_status != 2) {
+            return redirect()->route('transaction.pickup.index')->withErrors('Order belum selesai atau sudah diambil.');
+        }
+
+        return view('transaction.pickup_show', compact('order'));
+    }
+
+    public function pickupProcess(Request $request, $id)
+    {
+        $order = TransOrder::findOrFail($id);
+
+        if ($order->order_status != 2) {
+            return redirect()->route('transaction.pickup.index')->withErrors('Order belum selesai atau sudah diambil.');
+        }
+
+        $rules = [
+            'pickup_date' => 'required|date',
+            'notes' => 'nullable|string',
+        ];
+
+        // Jika belum lunas, wajib mengisikan nominal uang pembayaran
+        if ($order->payment_status == 1) {
+            $rules['order_pay'] = 'required|numeric|min:' . $order->total;
+        }
+
+        $request->validate($rules, [
+            'order_pay.required' => 'Nominal pembayaran wajib diisi untuk pelunasan.',
+            'order_pay.min' => 'Nominal pembayaran kurang dari total tagihan (Total: Rp ' . number_format($order->total, 0, ',', '.') . ').',
+        ]);
+
+        \Illuminate\Support\Facades\DB::beginTransaction();
+        try {
+            // Update order data
+            $orderData = [
+                'order_status' => 3, // Diambil
+            ];
+
+            if ($order->payment_status == 1) {
+                $order_pay = $request->order_pay;
+                $order_change = $order_pay - $order->total;
+
+                $orderData['payment_status'] = 0; // Lunas
+                $orderData['order_pay'] = $order_pay;
+                $orderData['paid_amount'] = $order->total;
+                $orderData['order_change'] = $order_change;
+            }
+
+            $order->update($orderData);
+
+            // Simpan log ke tabel trans_laundry_pickup
+            \App\Models\TransLaundryPickup::create([
+                'id_order' => $order->id,
+                'id_customer' => $order->id_customer,
+                'pickup_date' => $request->pickup_date,
+                'notes' => $request->notes,
+            ]);
+
+            \Illuminate\Support\Facades\DB::commit();
+            return redirect()->route('transaction.pickup.index')->with('success', 'Cucian berhasil diambil dan transaksi telah selesai!');
+
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\DB::rollback();
+            return redirect()->back()->withErrors('Terjadi kesalahan: ' . $e->getMessage())->withInput();
+        }
+    }
 }

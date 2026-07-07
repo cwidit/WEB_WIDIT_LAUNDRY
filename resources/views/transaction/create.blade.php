@@ -125,8 +125,18 @@
 
                             <div class="row justify-content-end">
                                 <div class="col-md-6">
+                                    <div class="form-group mb-2">
+                                        <label class="font-weight-bold">Jumlah Bayar (Subtotal)</label>
+                                        <input type="text" id="subtotal-display" class="form-control text-center font-weight-bold text-dark" readonly value="Rp 0">
+                                    </div>
+
+                                    <div class="form-group mb-2">
+                                        <label class="font-weight-bold">Pajak (5%)</label>
+                                        <input type="text" id="tax-display" class="form-control text-center font-weight-bold text-danger" readonly value="Rp 0">
+                                    </div>
+
                                     <div class="form-group mb-3">
-                                        <label class="font-weight-bold">Total Bayar (Termasuk Pajak 5%)</label>
+                                        <label class="font-weight-bold">Total Bayar (Termasuk Pajak)</label>
                                         <input type="hidden" name="total" id="total-hidden" value="0">
                                         <input type="text" id="total-display" class="form-control form-control-lg text-center font-weight-bold text-dark" style="font-size: 1.25rem; background-color: #eef2ff; border: 2px solid #6777ef;" readonly value="Rp 0">
                                     </div>
@@ -263,6 +273,8 @@
             let tax = subtotal * 0.05;
             let total = Math.round(subtotal + tax);
 
+            $('#subtotal-display').val('Rp ' + Math.round(subtotal).toLocaleString('id-ID'));
+            $('#tax-display').val('Rp ' + Math.round(tax).toLocaleString('id-ID'));
             $('#total-hidden').val(total);
             $('#total-display').val('Rp ' + total.toLocaleString('id-ID'));
         }
