@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no" name="viewport">
-    <title>Login &mdash; Widit Laundy</title>
+    <title>Login &mdash; Widit Laundry</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/stisla@2.3.0/assets/css/style.css">
@@ -79,7 +79,7 @@
                 <div class="row">
                     <div class="col-12 col-sm-8 offset-sm-2 col-md-6 offset-md-3 col-lg-6 offset-lg-3 col-xl-4 offset-xl-4">
                         <div class="login-brand">
-                            <h5>Widit Laundy</h5>
+                            <h5>Widit Laundry</h5>
                         </div>
 
                         <div class="card card-primary">
@@ -109,7 +109,7 @@
                             </div>
                         </div>
                         <div class="simple-footer">
-                            Copyright &copy; {{ date('Y') }} Widit Laundy
+                            Copyright &copy; {{ date('Y') }} Widit Laundry
                         </div>
                     </div>
                 </div>

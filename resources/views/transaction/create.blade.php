@@ -15,7 +15,7 @@
 
         <form action="{{ route('transaction.store') }}" method="POST">
             @csrf
-            
+
             <div class="row">
                 <div class="col-md-4">
                     <div class="card">
@@ -112,7 +112,7 @@
                                             <input type="number" name="qty[]" class="form-control qty-input" min="0.001" step="any" value="1" required>
                                         </td>
                                         <td>
-                                            <input type="text" name="notes[]" class="form-control notes-input" placeholder="ex: Kaos robek dikit">
+                                            <input type="text" name="notes[]" class="form-control notes-input" placeholder="ex: Kain Luntur">
                                         </td>
                                         <td>
                                             <button type="button" class="btn btn-danger btn-sm remove-row" disabled>Hapus</button>
@@ -131,7 +131,7 @@
                                     </div>
 
                                     <div class="form-group mb-2">
-                                        <label class="font-weight-bold">Pajak (5%)</label>
+                                        <label class="font-weight-bold">Pajak (25%)</label>
                                         <input type="text" id="tax-display" class="form-control text-center font-weight-bold text-danger" readonly value="Rp 0">
                                     </div>
 
@@ -148,7 +148,7 @@
                                             <option value="pickup">Bayar saat Ambil (Belum Lunas)</option>
                                         </select>
                                     </div>
-                                    
+
                                     <div class="form-group mb-3" id="order_pay_wrapper">
                                         <label class="font-weight-bold">Jumlah Uang yang Diterima (Rp) <span class="text-danger">*</span></label>
                                         <input type="number" name="order_pay" id="order_pay" class="form-control form-control-lg" placeholder="Masukkan nominal bayar" min="0" value="0" required>
@@ -270,7 +270,7 @@
                 let qty = parseFloat($(this).find('.qty-input').val()) || 0;
                 subtotal += price * qty;
             });
-            let tax = subtotal * 0.05;
+            let tax = subtotal * 0.25; // Pajak 25%
             let total = Math.round(subtotal + tax);
 
             $('#subtotal-display').val('Rp ' + Math.round(subtotal).toLocaleString('id-ID'));

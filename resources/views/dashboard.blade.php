@@ -25,7 +25,7 @@
                     </div>
                 </div>
             </div>
-            
+
             <div class="col-lg-4 col-md-6 col-sm-6 col-12">
                 <div class="card card-statistic-1">
                     <div class="card-icon bg-warning">
@@ -91,9 +91,9 @@
                                             @if($order->order_status == 0)
                                                 <span class="badge badge-leaf-green">Baru</span>
                                             @elseif($order->order_status == 1)
-                                                <span class="badge badge-info">Proses</span>
+                                                <span class="badge badge-warning">Proses</span>
                                             @elseif($order->order_status == 2)
-                                                <span class="badge badge-success">Selesai</span>
+                                                <span class="badge badge-primary">Selesai</span>
                                             @endif
                                         </td>
                                         <td>
@@ -128,15 +128,15 @@
                         <ul class="list-group">
                             <li class="list-group-item d-flex justify-content-between align-items-center">
                                 <span><i class="fas fa-dot-circle text-warning mr-2"></i> Baru</span>
-                                <span class="badge badge-primary badge-pill">{{ $count_baru }}</span>
+                                <span class="badge badge-leaf-green badge-pill">{{ $count_baru }}</span>
                             </li>
                             <li class="list-group-item d-flex justify-content-between align-items-center">
                                 <span><i class="fas fa-sync-alt text-info mr-2"></i> Proses</span>
-                                <span class="badge badge-info badge-pill">{{ $count_proses }}</span>
+                                <span class="badge badge-warning badge-pill">{{ $count_proses }}</span>
                             </li>
                             <li class="list-group-item d-flex justify-content-between align-items-center">
                                 <span><i class="fas fa-check-circle text-success mr-2"></i> Selesai (Siap Ambil)</span>
-                                <span class="badge badge-success badge-pill">{{ $count_selesai }}</span>
+                                <span class="badge badge-primary badge-pill">{{ $count_selesai }}</span>
                             </li>
                             <li class="list-group-item d-flex justify-content-between align-items-center">
                                 <span><i class="fas fa-archive text-secondary mr-2"></i> Sudah Diambil</span>
