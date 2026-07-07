@@ -66,7 +66,7 @@
                     <div class="card-header d-flex justify-content-between align-items-center">
                         <h4>Transaksi Berjalan</h4>
                         <div class="card-header-action">
-                            <a href="{{ route('transaction.create') }}" class="btn btn-primary btn-sm"><i class="fas fa-plus"></i> Transaksi Baru</a>
+                            <a href="{{ route('transaction.create') }}" class="btn btn-primary btn-sm" style="border-radius: 4px !important;"><i class="fas fa-plus"></i> Transaksi Baru</a>
                         </div>
                     </div>
                     <div class="card-body">
@@ -89,7 +89,7 @@
                                         <td>{{ $order->customer->customer_name ?? 'Umum' }}</td>
                                         <td>
                                             @if($order->order_status == 0)
-                                                <span class="badge badge-warning text-dark">Baru</span>
+                                                <span class="badge badge-leaf-green">Baru</span>
                                             @elseif($order->order_status == 1)
                                                 <span class="badge badge-info">Proses</span>
                                             @elseif($order->order_status == 2)
@@ -97,7 +97,7 @@
                                             @endif
                                         </td>
                                         <td>
-                                            <span class="badge {{ $order->payment_status == 0 ? 'badge-success' : 'badge-danger' }}">
+                                            <span class="badge {{ $order->payment_status == 0 ? 'badge-sky-blue' : 'badge-danger' }}">
                                                 {{ $order->payment_status == 0 ? 'Lunas' : 'Belum Lunas' }}
                                             </span>
                                         </td>

@@ -17,7 +17,7 @@
 
         <div class="card">
             <div class="card-header">
-                <a href="{{ route('transaction.create') }}" class="btn btn-primary">
+                <a href="{{ route('transaction.create') }}" class="btn btn-primary" style="border-radius: 4px !important;">
                     Tambah Transaksi Baru
                 </a>
             </div>
@@ -47,7 +47,7 @@
                                 <td>
                                     <!-- Menampilkan Status Pakaian -->
                                     @if($order->order_status == 0)
-                                        <span class="badge badge-warning">Baru</span>
+                                        <span class="badge badge-leaf-green">Baru</span>
                                     @elseif($order->order_status == 1)
                                         <span class="badge badge-info">Proses</span>
                                     @elseif($order->order_status == 2)

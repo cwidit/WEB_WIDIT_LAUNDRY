@@ -6,9 +6,6 @@
 <section class="section">
     <div class="section-header">
         <h1>Data User</h1>
-        <div class="section-header-button">
-            <a href="{{ route('user.create') }}" class="btn btn-primary">Tambah User</a>
-        </div>
     </div>
 
     <div class="section-body">
@@ -17,6 +14,12 @@
         @endif
 
         <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h4>Daftar User</h4>
+                <div class="card-header-action">
+                    <a href="{{ route('user.create') }}" class="btn btn-primary" style="border-radius: 4px !important;">Tambah User</a>
+                </div>
+            </div>
             <div class="card-body">
                 <div class="table-responsive">
                     <table class="table table-striped table-hover">

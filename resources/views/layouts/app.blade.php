@@ -68,6 +68,16 @@
             letter-spacing: 0.5px;
             font-weight: 700;
         }
+
+        /* Custom Status and Payment Badges */
+        .badge-leaf-green {
+            background-color: #2e7d32 !important;
+            color: #fff !important;
+        }
+        .badge-sky-blue {
+            background-color: #0ea5e9 !important;
+            color: #fff !important;
+        }
     </style>
 </head>
 

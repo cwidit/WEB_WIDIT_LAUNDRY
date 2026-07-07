@@ -14,10 +14,7 @@
             @if(session('success'))
                 <div class="alert alert-info">{{ session('success') }}</div>
             @endif
-            <h2 class="section-title">Manajemen Pelanggan</h2>
-            <p class="section-lead">
-                Halaman ini digunakan untuk melihat dan mengelola data pelanggan laundry.
-            </p>
+
 
             <div class="row">
                 <div class="col-12">
@@ -25,7 +22,7 @@
                         <div class="card-header">
                             <h4>Daftar Pelanggan</h4>
                             <div class="card-header-action">
-                                <a href="{{ route('customer.create') }}" class="btn btn-primary"><i class="fas fa-plus"></i> Tambah Customer</a>
+                                <a href="{{ route('customer.create') }}" class="btn btn-primary" style="border-radius: 4px !important;"><i class="fas fa-plus"></i> Tambah Customer</a>
                             </div>
                         </div>
                         <div class="card-body">

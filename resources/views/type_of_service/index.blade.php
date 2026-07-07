@@ -16,14 +16,14 @@
             @if(session('success'))
                 <div class="alert alert-info">{{ session('success') }}</div>
             @endif
-            <h2 class="section-title">Manajemen Harga & Layanan</h2>
+
             <div class="row">
                 <div class="col-12">
                     <div class="card">
                         <div class="card-header">
                             <h4>Daftar Layanan Laundry</h4>
                             <div class="card-header-action">
-                                <a href="{{ route('type_of_service.create') }}" class="btn btn-primary"><i class="fas fa-plus"></i> Tambah Service</a>
+                                <a href="{{ route('type_of_service.create') }}" class="btn btn-primary" style="border-radius: 4px !important;"><i class="fas fa-plus"></i> Tambah Service</a>
                             </div>
                         </div>
                         <div class="card-body">

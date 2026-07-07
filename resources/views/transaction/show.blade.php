@@ -274,7 +274,7 @@
                     </div>
                     <div class="line">
                         <span>Status Pembayaran</span>
-                        <span class="badge {{ $order->payment_status == 0 ? 'badge-success' : 'badge-danger' }}">
+                        <span class="badge {{ $order->payment_status == 0 ? 'badge-sky-blue' : 'badge-danger' }}">
                             {{ $order->payment_status == 0 ? 'Lunas' : 'Belum Lunas / Hutang' }}
                         </span>
                     </div>
@@ -285,7 +285,7 @@
                     <p>Pakaian yang tidak diambil lebih dari 30 hari menjadi tanggung jawab pemilik.</p>
                     <p><strong>Status Pakaian:</strong>
                         @if($order->order_status == 0)
-                            <span class="badge badge-warning">Baru</span>
+                            <span class="badge badge-leaf-green">Baru</span>
                         @elseif($order->order_status == 1)
                             <span class="badge badge-info">Proses</span>
                         @elseif($order->order_status == 2)
