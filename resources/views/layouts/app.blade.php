@@ -5,13 +5,70 @@
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no" name="viewport">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     
-    <title>@yield('title', 'Teeya Laundry') &mdash; Sistem Informasi</title>
+    <title>@yield('title', 'Widit Laundry') &mdash; Sistem Informasi</title>
 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css">
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/stisla@2.3.0/assets/css/style.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/stisla@2.3.0/assets/css/components.css">
+    <style>
+        /* Custom Navy button */
+        .btn-navy {
+            background-color: #1e3a8a !important;
+            border-color: #1e3a8a !important;
+            color: #fff !important;
+            box-shadow: 0 2px 6px rgba(30, 58, 138, 0.2);
+        }
+        .btn-navy:hover, .btn-navy:focus, .btn-navy:active {
+            background-color: #0f172a !important;
+            border-color: #0f172a !important;
+            color: #fff !important;
+        }
+
+        /* Change grey/muted text to navy */
+        .section-lead, 
+        .text-muted, 
+        .text-secondary,
+        .section-title {
+            color: #1e3a8a !important;
+        }
+
+        /* Force all sidebar elements to Navy */
+        .main-sidebar,
+        .main-sidebar *,
+        .main-sidebar .sidebar-brand a,
+        .main-sidebar .sidebar-menu li.menu-header,
+        .main-sidebar .sidebar-menu li a,
+        .main-sidebar .sidebar-menu li a span,
+        .main-sidebar .sidebar-menu li a i,
+        .main-sidebar .sidebar-menu li.active a,
+        .main-sidebar .sidebar-menu li.active a span,
+        .main-sidebar .sidebar-menu li.active a i,
+        .main-sidebar .sidebar-menu li.dropdown.active > a,
+        .main-sidebar .sidebar-menu li.dropdown.active > a i,
+        .main-sidebar .sidebar-menu li.dropdown.active > a span,
+        .main-sidebar .sidebar-menu li.dropdown .dropdown-menu li a,
+        .main-sidebar .sidebar-menu li.dropdown .dropdown-menu li a span,
+        .main-sidebar .sidebar-menu li.dropdown .dropdown-menu li.active a,
+        .main-sidebar .sidebar-menu li.dropdown .dropdown-menu li.active a span {
+            color: #1e3a8a !important;
+        }
+
+        /* Hover/focus color states for sidebar links */
+        .main-sidebar .sidebar-menu li a:hover,
+        .main-sidebar .sidebar-menu li a:hover i,
+        .main-sidebar .sidebar-menu li a:hover span,
+        .main-sidebar .sidebar-menu li.dropdown .dropdown-menu li a:hover,
+        .main-sidebar .sidebar-menu li.dropdown .dropdown-menu li a:hover span {
+            color: #0f172a !important; /* Darker navy hover color */
+        }
+        
+        .sidebar-menu li.menu-header {
+            letter-spacing: 0.5px;
+            font-weight: 700;
+        }
+    </style>
 </head>
 
 <body>
@@ -50,36 +107,54 @@
             <div class="main-sidebar sidebar-style-2">
                 <aside id="sidebar-wrapper">
                     <div class="sidebar-brand">
-                        <a href="{{ route('dashboard') }}">LaundryKu</a>
+                        <a href="{{ route('dashboard') }}">Widit Laundry</a>
                     </div>
                     <div class="sidebar-brand sidebar-brand-sm">
-                        <a href="{{ route('dashboard') }}">LK</a>
+                        <a href="{{ route('dashboard') }}">WL</a>
                     </div>
                     
                     <ul class="sidebar-menu">
+                        @php
+                            $role = optional(Auth::user()->level)->level_name;
+                        @endphp
+
                         <li class="menu-header">Halaman Utama</li>
                         <li class="{{ Request::is('dashboard*') ? 'active' : '' }}">
                             <a class="nav-link" href="{{ route('dashboard') }}"><i class="fas fa-fire"></i> <span>Dashboard</span></a>
                         </li>
 
-                        <li class="menu-header">Master Data</li>
-                        <li class="{{ Request::is('level*') ? 'active' : '' }}">
-                            <a class="nav-link" href="{{ route('level.index') }}"><i class="fas fa-users-cog"></i> <span>Data Level</span></a>
-                        </li>
-                        <li class="{{ Request::is('customer*') ? 'active' : '' }}">
-                            <a class="nav-link" href="{{ route('customer.index') }}"><i class="fas fa-user-friends"></i> <span>Data Customer</span></a>
-                        </li>
-                        <li class="{{ Request::is('type_of_service*') ? 'active' : '' }}">
-                            <a class="nav-link" href="{{ route('type_of_service.index') }}"><i class="fas fa-tshirt"></i> <span>Layanan Laundry</span></a>
-                        </li>
+                        @if (in_array($role, ['Administrator', 'Operator']))
+                            <li class="menu-header">Master Data</li>
+                            <li class="dropdown {{ Request::is('level*') || Request::is('user*') || Request::is('customer*') || Request::is('type_of_service*') ? 'active' : '' }}">
+                                <a href="#" class="nav-link has-dropdown"><i class="fas fa-database"></i> <span>Master Data</span></a>
+                                <ul class="dropdown-menu">
+                                    @if ($role === 'Administrator')
+                                        <li class="{{ Request::is('level*') ? 'active' : '' }}"><a class="nav-link" href="{{ route('level.index') }}">Level</a></li>
+                                        <li class="{{ Request::is('user*') ? 'active' : '' }}"><a class="nav-link" href="{{ route('user.index') }}">User</a></li>
+                                    @endif
+                                    <li class="{{ Request::is('customer*') ? 'active' : '' }}"><a class="nav-link" href="{{ route('customer.index') }}">Customer</a></li>
+                                    @if ($role === 'Administrator')
+                                        <li class="{{ Request::is('type_of_service*') ? 'active' : '' }}"><a class="nav-link" href="{{ route('type_of_service.index') }}">Layanan Laundry</a></li>
+                                    @endif
+                                </ul>
+                            </li>
 
-                        <li class="menu-header">Operasional</li>
-                        <li class="{{ Request::is('transaction*') ? 'active' : '' }}">
-                            <a class="nav-link" href="{{ route('transaction.index') }}"><i class="fas fa-file-invoice-dollar"></i> <span>Transaksi</span></a>
-                        </li>
-                        <li class="{{ Request::is('report*') ? 'active' : '' }}">
-                            <a class="nav-link" href="{{ route('report.index') }}"><i class="fas fa-print"></i> <span>Laporan</span></a>
-                        </li>
+                            <li class="menu-header">Order</li>
+                            <li class="dropdown {{ Request::is('transaction*') && !Request::is('transaction/*/print') ? 'active' : '' }}">
+                                <a href="#" class="nav-link has-dropdown"><i class="fas fa-shopping-basket"></i> <span>Order</span></a>
+                                <ul class="dropdown-menu">
+                                    <li class="{{ Request::is('transaction/create') ? 'active' : '' }}"><a class="nav-link" href="{{ route('transaction.create') }}">New Order</a></li>
+                                    <li class="{{ Request::is('transaction') ? 'active' : '' }}"><a class="nav-link" href="{{ route('transaction.index') }}">History Order</a></li>
+                                </ul>
+                            </li>
+                        @endif
+
+                        @if (in_array($role, ['Administrator', 'Owner']))
+                            <li class="menu-header">Report</li>
+                            <li class="{{ Request::is('report*') ? 'active' : '' }}">
+                                <a class="nav-link" href="{{ route('report.index') }}"><i class="fas fa-chart-line"></i> <span>Report</span></a>
+                            </li>
+                        @endif
                     </ul>
                 </aside>
             </div>

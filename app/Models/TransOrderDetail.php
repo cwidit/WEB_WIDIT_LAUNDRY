@@ -7,22 +7,17 @@ use Illuminate\Database\Eloquent\Model;
 class TransOrderDetail extends Model
 {
     protected $table = 'trans_order_detail';
-    
-    protected $fillable = [
-    'id_order',
-    'id_service',
-    'qty',
-    'subtotal',
-    'notes'
-];
+    protected $guarded = [];
 
-public function order()
-{
-    return $this->belongsTo(TransOrder::class, 'id_order');
-}
+    // Relasi kembali ke data induk transaksi
+    public function transOrder()
+    {
+        return $this->belongsTo(TransOrder::class, 'id_order', 'id');
+    }
 
-public function service()
-{
-    return $this->belongsTo(TypeOfService::class, 'id_service');
-}
+    // Relasi ke data Master Layanan
+    public function typeOfService()
+    {
+        return $this->belongsTo(TypeOfService::class, 'id_service', 'id');
+    }
 }

@@ -25,7 +25,22 @@ class ReportController extends Controller
         
         // Menghitung total pendapatan dari data yang difilter
         $total_revenue = $orders->sum('total');
+        $total_orders = $orders->count();
+        $status_new = $orders->where('order_status', 0)->count();
+        $status_processing = $orders->where('order_status', 1)->count();
+        $status_completed = $orders->where('order_status', 2)->count();
+        $status_picked_up = $orders->where('order_status', 3)->count();
 
-        return view('report.index', compact('orders', 'start_date', 'end_date', 'total_revenue'));
+        return view('report.index', compact(
+            'orders',
+            'start_date',
+            'end_date',
+            'total_revenue',
+            'total_orders',
+            'status_new',
+            'status_processing',
+            'status_completed',
+            'status_picked_up'
+        ));
     }
 }

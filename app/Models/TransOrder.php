@@ -7,30 +7,24 @@ use Illuminate\Database\Eloquent\Model;
 class TransOrder extends Model
 {
     protected $table = 'trans_order';
-    
-    protected $fillable = [
-        'id_customer',
-        'order_code',
-        'order_date',
-        'order_end_date',
-        'order_status',
-        'order_pay',
-        'order_change',
-        'total'
-    ];
+    protected $guarded = []; // Mengizinkan semua kolom diisi
 
+    // Relasi ke Customer
     public function customer()
-{
-    return $this->belongsTo(Customer::class, 'id_customer');
-}
+    {
+        return $this->belongsTo(Customer::class, 'id_customer', 'id');
+    }
 
-public function details()
-{
-    return $this->hasMany(TransOrderDetail::class, 'id_order');
-}
+    // Relasi ke User (Operator)
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'id_user', 'id');
+    }
 
-public function pickup()
-{
-    return $this->hasOne(TransLaundryPickup::class, 'id_order');
-}
+    // Perhatikan nama fungsinya. Jika di blade tertulis $order->details, gunakan nama fungsi details().
+    
+    public function details()
+    {
+        return $this->hasMany(TransOrderDetail::class, 'id_order', 'id');
+    }
 }

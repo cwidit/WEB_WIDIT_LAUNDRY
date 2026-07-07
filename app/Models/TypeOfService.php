@@ -6,16 +6,12 @@ use Illuminate\Database\Eloquent\Model;
 
 class TypeOfService extends Model
 {
-    protected $table = 'type_of_service';
+    // Sesuaikan nama tabel di database
+    protected $table = 'type_of_service'; 
     
     protected $fillable = [
         'service_name',
         'price',
         'description'
     ];
-
-    public function transOrderDetails()
-{
-    return $this->hasMany(TransOrderDetail::class, 'id_service');
-}
 }

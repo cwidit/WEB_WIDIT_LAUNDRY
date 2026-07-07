@@ -12,11 +12,11 @@
         <div class="card">
             <div class="card-body">
 
-                <<a href="{{ route('level.create') }}" class="btn btn-primary mb-3">>
+                <a href="{{ route('level.create') }}" class="btn btn-primary mb-3">
                     Tambah Level
                 </a>
                 @if(session('success'))
-                <div class="alert alert-success">
+                <div class="alert alert-info">
                 {{ session('success') }}
                 </div>
                 @endif
@@ -25,7 +25,7 @@
                     <tr>
                     <th>No</th>
                     <th>Nama Level</th>
-                    <th>Aksi</th>
+                    <th>Action</th>
                  </tr>
                 </thead>
                     <tbody>
@@ -34,7 +34,7 @@
     <td>{{ $loop->iteration }}</td>
     <td>{{ $level->level_name }}</td>
     <td>
-        <a href="{{ route('level.edit', $level->id) }}" class="btn btn-warning btn-sm">
+        <a href="{{ route('level.edit', $level->id) }}" class="btn btn-navy btn-sm">
             Edit
         </a>
 

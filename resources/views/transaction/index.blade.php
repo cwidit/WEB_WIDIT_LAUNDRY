@@ -10,7 +10,7 @@
 
     <div class="section-body">
         @if(session('success'))
-            <div class="alert alert-success">
+            <div class="alert alert-info">
                 {{ session('success') }}
             </div>
         @endif
@@ -33,11 +33,12 @@
                                 <th>Customer</th>
                                 <th>Status</th>
                                 <th>Total Tagihan</th>
-                                <th width="15%">Aksi</th>
+                                <th>Total Berat</th>
+                                <th width="15%">Action</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @forelse($orders as $order)
+                            @forelse($transactions as $order)
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
                                 <td><strong>{{ $order->order_code }}</strong></td>
@@ -56,6 +57,7 @@
                                     @endif
                                 </td>
                                 <td>Rp {{ number_format($order->total, 0, ',', '.') }}</td>
+                                <td>{{ $order->details->sum('qty') / 1000 }} kg</td>
                                 <td>
                                     <!-- Tombol Detail untuk melihat item cucian -->
                                     <a href="{{ route('transaction.show', $order->id) }}" class="btn btn-info btn-sm">
@@ -65,7 +67,7 @@
                             </tr>
                             @empty
                             <tr>
-                                <td colspan="7" class="text-center">
+                                <td colspan="8" class="text-center">
                                     Belum ada data transaksi.
                                 </td>
                             </tr>

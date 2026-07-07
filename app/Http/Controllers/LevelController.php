@@ -14,9 +14,16 @@ class LevelController extends Controller
      */
     public function index()
     {
-    $levels = Level::latest()->get();
+        $user = auth()->user();
+        $levelName = optional($user->level)->level_name;
 
-    return view('level.index', compact('levels'));
+        if (!in_array($levelName, ['Administrator'])) {
+            abort(403, 'Anda tidak memiliki hak akses.');
+        }
+
+        $levels = Level::latest()->get();
+
+        return view('level.index', compact('levels'));
     }
 
     /**
@@ -24,6 +31,13 @@ class LevelController extends Controller
      */
     public function create()
     {
+        $user = auth()->user();
+        $levelName = optional($user->level)->level_name;
+
+        if (!in_array($levelName, ['Administrator'])) {
+            abort(403, 'Anda tidak memiliki hak akses.');
+        }
+
         return view('level.create');
     }
 
@@ -31,18 +45,25 @@ class LevelController extends Controller
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
-{
-    $request->validate([
-        'level_name' => 'required|max:50',
-    ]);
+    {
+        $user = auth()->user();
+        $levelName = optional($user->level)->level_name;
 
-    Level::create([
-        'level_name' => $request->level_name,
-    ]);
+        if (!in_array($levelName, ['Administrator'])) {
+            abort(403, 'Anda tidak memiliki hak akses.');
+        }
 
-    return redirect()->route('level.index')
-        ->with('success', 'Data level berhasil ditambahkan.');
-}
+        $request->validate([
+            'level_name' => 'required|max:50',
+        ]);
+
+        Level::create([
+            'level_name' => $request->level_name,
+        ]);
+
+        return redirect()->route('level.index')
+            ->with('success', 'Data level berhasil ditambahkan.');
+    }
 
     /**
      * Display the specified resource.
@@ -57,7 +78,14 @@ class LevelController extends Controller
      */
     public function edit(Level $level)
     {
-    return view('level.edit', compact('level'));
+        $user = auth()->user();
+        $levelName = optional($user->level)->level_name;
+
+        if (!in_array($levelName, ['Administrator'])) {
+            abort(403, 'Anda tidak memiliki hak akses.');
+        }
+
+        return view('level.edit', compact('level'));
     }
 
     /**
@@ -65,16 +93,23 @@ class LevelController extends Controller
      */
     public function update(Request $request, Level $level)
     {
-    $request->validate([
-        'level_name' => 'required|max:50',
-    ]);
+        $user = auth()->user();
+        $levelName = optional($user->level)->level_name;
 
-    $level->update([
-        'level_name' => $request->level_name,
-    ]);
+        if (!in_array($levelName, ['Administrator'])) {
+            abort(403, 'Anda tidak memiliki hak akses.');
+        }
 
-    return redirect()->route('level.index')
-                     ->with('success','Data berhasil diupdate.');
+        $request->validate([
+            'level_name' => 'required|max:50',
+        ]);
+
+        $level->update([
+            'level_name' => $request->level_name,
+        ]);
+
+        return redirect()->route('level.index')
+                         ->with('success','Data berhasil diupdate.');
     }
 
     /**
@@ -85,9 +120,16 @@ class LevelController extends Controller
      */
     public function destroy($id)
     {
+        $user = auth()->user();
+        $levelName = optional($user->level)->level_name;
+
+        if (!in_array($levelName, ['Administrator'])) {
+            abort(403, 'Anda tidak memiliki hak akses.');
+        }
+
         // Tembak ID-nya langsung, cari datanya
         $level = \App\Models\Level::findOrFail($id);
-        
+
         // Sikat hapus!
         $level->delete();
 

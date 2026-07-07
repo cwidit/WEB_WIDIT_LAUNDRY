@@ -13,28 +13,24 @@ class TypeOfServiceSeeder extends Seeder
      */
     public function run(): void
 {
-    TypeOfService::create([
-        'service_name' => 'Cuci & Gosok',
-        'price' => 5000,
-        'description' => 'Cuci dan gosok per kg'
-    ]);
+    TypeOfService::updateOrCreate(
+        ['service_name' => 'Cuci & Gosok'],
+        ['price' => 5000, 'description' => 'Cuci dan gosok per kg']
+    );
 
-    TypeOfService::create([
-        'service_name' => 'Hanya Cuci',
-        'price' => 4500,
-        'description' => 'Cuci saja per kg'
-    ]);
+    TypeOfService::updateOrCreate(
+        ['service_name' => 'Hanya Cuci'],
+        ['price' => 4500, 'description' => 'Cuci saja per kg']
+    );
 
-    TypeOfService::create([
-        'service_name' => 'Hanya Gosok',
-        'price' => 5000,
-        'description' => 'Gosok saja per kg'
-    ]);
+    TypeOfService::updateOrCreate(
+        ['service_name' => 'Hanya Gosok'],
+        ['price' => 5000, 'description' => 'Gosok saja per kg']
+    );
 
-    TypeOfService::create([
-        'service_name' => 'Laundry Besar',
-        'price' => 7000,
-        'description' => 'Selimut, karpet, sprei, mantel'
-    ]);
+    TypeOfService::updateOrCreate(
+        ['service_name' => 'Laundry Besar'],
+        ['price' => 7000, 'description' => 'Selimut, karpet, sprei, mantel']
+    );
 }
 }

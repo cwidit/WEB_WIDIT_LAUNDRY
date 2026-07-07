@@ -14,7 +14,10 @@ class CheckRole
             return redirect('/login');
         }
 
-        if (! in_array(auth()->user()->level->level_name, $roles)) {
+        $user = auth()->user();
+        $levelName = optional($user->level)->level_name;
+
+        if (! $levelName || ! in_array($levelName, $roles)) {
             abort(403, 'Anda tidak memiliki hak akses.');
         }
 
