@@ -33,6 +33,8 @@ Route::get('/dashboard', function () {
     $count_selesai = \App\Models\TransOrder::where('order_status', 2)->count();
     $count_diambil = \App\Models\TransOrder::where('order_status', 3)->count();
 
+    $role = auth()->user()->level->name; // Ambil level user yang sedang login
+
     return view('dashboard', compact(
         'total_customer',
         'total_transaksi',
@@ -41,7 +43,8 @@ Route::get('/dashboard', function () {
         'count_baru',
         'count_proses',
         'count_selesai',
-        'count_diambil'
+        'count_diambil',
+        'role'
     ));
 })->middleware(['auth', 'verified', 'prevent-back-history'])->name('dashboard');
 

@@ -23,7 +23,25 @@ class TransOrderController extends Controller
     {
         $customers = Customer::orderBy('customer_name', 'asc')->get();
         $services = TypeOfService::all();
-        $order_code = 'ORD-' . strtoupper(Str::random(6));
+
+        // 1. Ubah bagian ini dari 'LAU-' menjadi 'LAUNDRY-'
+        $datePrefix = 'LAUNDRY-' . date('ymd') . '-';
+
+        // 2. Sistem mencari order terakhir yang menggunakan awalan baru ini
+        $lastOrder = \App\Models\TransOrder::where('order_code', 'LIKE', $datePrefix . '%')
+                        ->orderBy('id', 'desc')
+                        ->first();
+
+        if ($lastOrder) {
+            // Karena bagian ujungnya tetap 4 digit angka, potongan teks (substr) tetap -4
+            $lastNumber = (int) substr($lastOrder->order_code, -4);
+            $nextNumber = $lastNumber + 1;
+        } else {
+            $nextNumber = 1;
+        }
+
+        // 3. Gabungkan awalan LAUNDRY-yymmdd- dengan urutan 4 digit (0001, 0002, dst)
+        $order_code = $datePrefix . str_pad($nextNumber, 4, '0', STR_PAD_LEFT);
 
         return view('transaction.create', compact('customers', 'services', 'order_code'));
     }
@@ -79,7 +97,7 @@ class TransOrderController extends Controller
             // 2. Kalkulasi Data Tambahan
             $payment_option = $request->payment_option;
             $total = $request->total;
-            
+
             if ($payment_option === 'pickup') {
                 $order_pay = 0;
                 $order_change = 0;
@@ -90,7 +108,7 @@ class TransOrderController extends Controller
                 $order_change = ($order_pay > $total) ? ($order_pay - $total) : 0;
                 $payment_status = ($order_pay >= $total) ? 0 : 1; // 0 = Lunas, 1 = Hutang
             }
-            
+
             // Set estimasi tanggal selesai
             $order_end_date = date('Y-m-d', strtotime($request->order_date . ' + 3 days'));
 
@@ -118,7 +136,7 @@ class TransOrderController extends Controller
                 \App\Models\TransOrderDetail::create([
                     'id_order' => $order->id,
                     'id_service' => $service_id,
-                    'qty' => $qty_gram, 
+                    'qty' => $qty_gram,
                     'subtotal' => $subtotal_item,
                     'notes' => $request->notes[$key] ?? null,
                 ]);
@@ -160,7 +178,7 @@ class TransOrderController extends Controller
         ]);
 
         $order = TransOrder::findOrFail($id);
-        
+
         $data = [
             'order_status' => $request->order_status,
             'payment_status' => $request->payment_status,
@@ -198,7 +216,7 @@ class TransOrderController extends Controller
     public function pickupShow($id)
     {
         $order = TransOrder::with(['customer', 'details.typeOfService'])->findOrFail($id);
-        
+
         // Hanya izinkan order berstatus 2 (Selesai) untuk dipickup
         if ($order->order_status != 2) {
             return redirect()->route('transaction.pickup.index')->withErrors('Order belum selesai atau sudah diambil.');
