@@ -287,6 +287,10 @@
                             @if ($order->order_status == 0)
                                 <span class="badge badge-leaf-green">Baru</span>
                             @elseif($order->order_status == 1)
+                                <span class="badge badge-warning">Proses</span>
+                            @elseif($order->order_status == 2)
+                                <span class="badge badge-success">Selesai (Siap Ambil)</span>
+                            @elseif($order->order_status == 3)
                                 <span class="badge badge-primary">Diambil</span>
                             @endif
                         </p>
@@ -294,7 +298,7 @@
                 </div>
 
                 <div class="receipt-actions no-print">
-                    <a href="{{ route('transaction.index') }}" class="btn btn-secondary btn-icon icon-left"><i
+                    <a href="{{ route('transaction.pickup.index') }}" class="btn btn-secondary btn-icon icon-left"><i
                             class="fas fa-arrow-left"></i> Kembali</a>
                     <a href="{{ route('transaction.print', $order->id) }}" target="_blank"
                         class="btn btn-warning btn-icon icon-left"><i class="fas fa-print"></i> Cetak Nota</a>
@@ -302,7 +306,7 @@
             </div>
 
             <!-- Form Update Status (Hanya untuk Admin & Operator) -->
-            @if (in_array(optional(Auth::user()->level)->level_name, ['Administrator', 'Operator']))
+            @if (in_array(optional(Auth::user()->level)->level_name, ['Administrator', 'Operator']) && $order->order_status != 3)
                 <div class="card mt-4 no-print" style="max-width: 900px; margin: 20px auto 0;">
                     <div class="card-header border-bottom">
                         <h4>Perbarui Status Transaksi</h4>
@@ -317,10 +321,14 @@
                                     <div class="form-group mb-0">
                                         <label class="font-weight-bold">Status Cucian</label>
                                         <select name="order_status" class="form-control" required>
-                                            <option value="0" {{ $order->order_status == 0 ? 'selected' : '' }}>Baru
-                                            </option>
-                                            <option value="1" {{ $order->order_status == 1 ? 'selected' : '' }}>Diambil
-                                            </option>
+                                            <option value="0" {{ $order->order_status == 0 ? 'selected' : '' }}>Baru</option>
+                                            @if($order->order_status == 1)
+                                                <option value="1" selected>Proses</option>
+                                            @endif
+                                            <option value="2" {{ $order->order_status == 2 ? 'selected' : '' }}>Selesai</option>
+                                            @if($order->order_status == 3)
+                                                <option value="3" selected>Diambil</option>
+                                            @endif
                                         </select>
                                     </div>
                                 </div>
@@ -341,6 +349,57 @@
                                     </button>
                                 </div>
                             </div>
+
+                            @if($order->payment_status == 1)
+                            <div class="row mt-3" id="payment-input-wrapper" style="display: none;">
+                                <div class="col-md-6">
+                                    <div class="form-group mb-0">
+                                        <label class="font-weight-bold">Uang Diterima (Rp) <span class="text-danger">*</span></label>
+                                        <input type="number" name="order_pay" id="status_order_pay" class="form-control font-weight-bold" min="{{ $order->total }}" placeholder="Masukkan jumlah uang">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group mb-0">
+                                        <label class="font-weight-bold">Uang Kembalian</label>
+                                        <input type="text" id="status_order_change" class="form-control font-weight-bold text-success" readonly style="background-color: #e8f5e9;" value="Rp 0">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <script>
+                                document.addEventListener('DOMContentLoaded', function() {
+                                    const paymentSelect = document.querySelector('select[name="payment_status"]');
+                                    const paymentWrapper = document.getElementById('payment-input-wrapper');
+                                    const payInput = document.getElementById('status_order_pay');
+                                    const changeInput = document.getElementById('status_order_change');
+                                    const orderTotal = {{ $order->total }};
+
+                                    function togglePaymentFields() {
+                                        if (paymentSelect.value == '0') {
+                                            $(paymentWrapper).slideDown();
+                                            payInput.setAttribute('required', 'true');
+                                        } else {
+                                            $(paymentWrapper).slideUp();
+                                            payInput.removeAttribute('required');
+                                            payInput.value = '';
+                                            changeInput.value = 'Rp 0';
+                                        }
+                                    }
+
+                                    paymentSelect.addEventListener('change', togglePaymentFields);
+
+                                    payInput.addEventListener('input', function() {
+                                        const payVal = parseFloat(payInput.value) || 0;
+                                        const changeVal = payVal - orderTotal;
+                                        if (changeVal >= 0) {
+                                            changeInput.value = 'Rp ' + Math.round(changeVal).toLocaleString('id-ID');
+                                        } else {
+                                            changeInput.value = 'Rp 0';
+                                        }
+                                    });
+                                });
+                            </script>
+                            @endif
                         </form>
                     </div>
                 </div>

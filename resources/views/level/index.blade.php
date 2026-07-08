@@ -13,7 +13,7 @@
             <div class="card-header d-flex justify-content-between align-items-center">
                 <h4>Daftar Level</h4>
                 <div class="card-header-action">
-                    <a href="{{ route('level.create') }}" class="btn btn-primary" style="border-radius: 4px !important;">Tambah Level</a>
+                    <a href="{{ route('level.create') }}" class="btn btn-primary" style="border-radius: 4px !important;">+ Tambah Level</a>
                 </div>
             </div>
             <div class="card-body">

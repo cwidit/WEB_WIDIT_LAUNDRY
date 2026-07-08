@@ -154,7 +154,7 @@
                                 <a href="#" class="nav-link has-dropdown"><i class="fas fa-shopping-basket"></i> <span>Order</span></a>
                                 <ul class="dropdown-menu">
                                     <li class="{{ Request::is('transaction/create') ? 'active' : '' }}"><a class="nav-link" href="{{ route('transaction.create') }}">New Order</a></li>
-                                    {{-- <li class="{{ Request::is('transaction') ? 'active' : '' }}"><a class="nav-link" href="{{ route('transaction.index') }}">History Order</a></li> --}}
+
                                     <li class="{{ Request::is('pickup*') ? 'active' : '' }}"><a class="nav-link" href="{{ route('transaction.pickup.index') }}">Pickup Laundry</a></li>
                                 </ul>
                             </li>

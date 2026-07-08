@@ -65,11 +65,7 @@
                 <div class="card">
                     <div class="card-header d-flex justify-content-between align-items-center">
                         <h4>Transaksi Berjalan</h4>
-                        @if (in_array($role, ['Administrator', 'Operator']))
-                        <div class="card-header-action">
-                            <a href="{{ route('transaction.create') }}" class="btn btn-primary btn-sm" style="border-radius: 4px !important;"><i class="fas fa-plus"></i> Transaksi Baru</a>
-                        </div>
-                        @endif
+
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">

@@ -15,8 +15,7 @@ class TransOrderController extends Controller
 {
     public function index()
     {
-        $transactions = TransOrder::with(['customer', 'details'])->orderBy('id', 'desc')->get();
-        return view('transaction.index', compact('transactions'));
+        return redirect()->route('transaction.pickup.index');
     }
 
     public function create()
@@ -143,7 +142,7 @@ class TransOrderController extends Controller
             }
 
             \Illuminate\Support\Facades\DB::commit();
-            return redirect()->route('transaction.index')->with('success', 'Transaksi berhasil disimpan!');
+            return redirect()->route('transaction.pickup.index')->with('success', 'Transaksi berhasil disimpan!');
 
         } catch (\Exception $e) {
             \Illuminate\Support\Facades\DB::rollback();
@@ -172,41 +171,66 @@ class TransOrderController extends Controller
 
     public function updateStatus(Request $request, $id)
     {
-        $request->validate([
+        $order = TransOrder::findOrFail($id);
+
+        $rules = [
             'order_status' => 'required|in:0,1,2,3',
             'payment_status' => 'required|in:0,1',
-        ]);
+        ];
 
-        $order = TransOrder::findOrFail($id);
+        // Jika status pembayaran diubah dari Belum Lunas (1) menjadi Lunas (0)
+        if ($request->payment_status == 0 && $order->payment_status == 1) {
+            $rules['order_pay'] = 'required|numeric|min:' . $order->total;
+        }
+
+        $request->validate($rules, [
+            'order_pay.required' => 'Nominal uang yang diterima wajib diisi.',
+            'order_pay.min' => 'Uang yang diterima kurang dari total tagihan (Total: Rp ' . number_format($order->total, 0, ',', '.') . ').',
+        ]);
 
         $data = [
             'order_status' => $request->order_status,
             'payment_status' => $request->payment_status,
         ];
 
-        // Jika status pembayaran diubah jadi Lunas (0) dan sebelumnya belum lunas (1),
-        // set uang bayar jadi total harga dan hilangkan hutang.
         if ($request->payment_status == 0 && $order->payment_status == 1) {
-            $data['order_pay'] = $order->total;
+            $order_pay = $request->order_pay;
+            $order_change = $order_pay - $order->total;
+
+            $data['order_pay'] = $order_pay;
             $data['paid_amount'] = $order->total;
-            $data['order_change'] = 0;
+            $data['order_change'] = $order_change;
         }
 
         $order->update($data);
+
+        // Jika status diubah menjadi Diambil (3), pastikan log pengambilan dibuat
+        if ($request->order_status == 3 && $order->order_status != 3) {
+            $exists = \App\Models\TransLaundryPickup::where('id_order', $order->id)->exists();
+            if (!$exists) {
+                \App\Models\TransLaundryPickup::create([
+                    'id_order' => $order->id,
+                    'id_customer' => $order->id_customer,
+                    'pickup_date' => now(),
+                    'notes' => 'Diambil via pembaruan status',
+                ]);
+            }
+        }
 
         return redirect()->route('transaction.show', $id)->with('success', 'Status transaksi berhasil diperbarui.');
     }
 
     public function pickupIndex()
     {
-        // Siap Diambil: order_status = 2 (Selesai)
+        // Cucian Aktif / Berjalan (status 0: Baru, 1: Proses)
         $ready_orders = TransOrder::with(['customer', 'details'])
-            ->where('order_status', 2)
+            ->whereIn('order_status', [0, 1])
             ->orderBy('id', 'desc')
             ->get();
 
-        // Riwayat Pengambilan: data dari trans_laundry_pickup
-        $pickup_history = \App\Models\TransLaundryPickup::with(['order', 'customer'])
+        // Riwayat Pengambilan (status 2: Selesai, 3: Diambil)
+        $pickup_history = TransOrder::with(['customer', 'details', 'pickupLog'])
+            ->whereIn('order_status', [2, 3])
             ->orderBy('id', 'desc')
             ->get();
 

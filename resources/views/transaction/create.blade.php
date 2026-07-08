@@ -105,8 +105,6 @@
                         <div class="card">
                             <div class="card-header d-flex justify-content-between align-items-center">
                                 <h4>Item Cucian</h4>
-                                <button type="button" class="btn btn-primary btn-sm" id="add-row"
-                                    style="border-radius: 2px !important;">+ Tambah Baris</button>
                             </div>
                             <div class="card-body">
                                 <table class="table table-bordered" id="item-table">
@@ -148,6 +146,11 @@
                                     </tbody>
                                 </table>
 
+                                <div class="mt-3">
+                                    <button type="button" class="btn btn-primary btn-sm" id="add-row"
+                                        style="border-radius: 4px !important;">+ Tambah Order</button>
+                                </div>
+
                                 <hr>
 
                                 <div class="row justify-content-end">
@@ -167,11 +170,11 @@
                                         </div>
 
                                         <div class="form-group mb-3">
-                                            <label class="font-weight-bold">Total Bayar (Termasuk Pajak)</label>
+                                            <label class="font-weight-bold">Grand Total</label>
                                             <input type="hidden" name="total" id="total-hidden" value="0">
                                             <input type="text" id="total-display"
-                                                class="form-control form-control-lg text-center font-weight-bold text-dark"
-                                                style="font-size: 1.25rem; background-color: #eef2ff; border: 2px solid #6777ef;"
+                                                class="form-control form-control-lg text-center font-weight-bold"
+                                                style="font-size: 1.25rem; background-color: #ffffff; border: 2px solid #000080; color: #000080 !important;"
                                                 readonly value="Rp 0">
                                         </div>
 
@@ -191,8 +194,8 @@
                                             </label>
 
                                             <input type="number" name="order_pay" id="order_pay"
-                                                class="form-control form-control-lg" placeholder="Masukkan nominal bayar"
-                                                min="0" value="0" required>
+                                                class="form-control form-control-lg" placeholder="Rp"
+                                                min="0" value="" required>
 
                                             <small id="payment_note" class="form-text text-danger"></small>
                                         </div>
@@ -206,7 +209,7 @@
                                         </div>
 
                                         <div class="d-flex justify-content-end gap-2">
-                                            <a href="{{ route('transaction.index') }}"
+                                            <a href="{{ route('transaction.pickup.index') }}"
                                                 class="btn btn-secondary mr-2">Batal</a>
                                             <button type="submit" class="btn btn-primary btn-lg">Simpan
                                                 Transaksi</button>

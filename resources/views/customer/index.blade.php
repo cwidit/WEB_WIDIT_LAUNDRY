@@ -22,7 +22,7 @@
                         <div class="card-header">
                             <h4>Daftar Pelanggan</h4>
                             <div class="card-header-action">
-                                <a href="{{ route('customer.create') }}" class="btn btn-primary" style="border-radius: 4px !important;"><i class="fas fa-plus"></i> Tambah Customer</a>
+                                <a href="{{ route('customer.create') }}" class="btn btn-primary" style="border-radius: 4px !important;">+ Tambah Customer</a>
                             </div>
                         </div>
                         <div class="card-body">

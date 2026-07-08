@@ -27,4 +27,10 @@ class TransOrder extends Model
     {
         return $this->hasMany(TransOrderDetail::class, 'id_order', 'id');
     }
+
+    // Relasi ke Log Pengambilan
+    public function pickupLog()
+    {
+        return $this->hasOne(TransLaundryPickup::class, 'id_order', 'id');
+    }
 }
