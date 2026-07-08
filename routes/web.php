@@ -33,22 +33,25 @@ Route::get('/dashboard', function () {
     $count_selesai = \App\Models\TransOrder::where('order_status', 2)->count();
     $count_diambil = \App\Models\TransOrder::where('order_status', 3)->count();
 
+    $role = optional(auth()->user()->level)->level_name; // Ambil level user yang sedang login
+
     return view('dashboard', compact(
-        'total_customer', 
-        'total_transaksi', 
-        'pendapatan', 
+        'total_customer',
+        'total_transaksi',
+        'pendapatan',
         'active_transactions',
         'count_baru',
         'count_proses',
         'count_selesai',
-        'count_diambil'
+        'count_diambil',
+        'role'
     ));
-})->middleware(['auth', 'verified'])->name('dashboard');
+})->middleware(['auth', 'verified', 'prevent-back-history'])->name('dashboard');
 
 // --------------------------------------------------------
 // 1. AKSES KHUSUS ADMINISTRATOR
 // --------------------------------------------------------
-Route::middleware(['auth', 'role:Administrator'])->group(function () {
+Route::middleware(['auth', 'prevent-back-history', 'role:Administrator'])->group(function () {
     Route::resource('level', LevelController::class);
     Route::resource('type_of_service', TypeOfServiceController::class);
     Route::resource('user', UserController::class); // Sesuai instruksi UjiKom
@@ -57,12 +60,12 @@ Route::middleware(['auth', 'role:Administrator'])->group(function () {
 // --------------------------------------------------------
 // 2. AKSES BERSAMA: ADMINISTRATOR & OPERATOR
 // --------------------------------------------------------
-Route::middleware(['auth', 'role:Administrator,Operator'])->group(function () {
+Route::middleware(['auth', 'prevent-back-history', 'role:Administrator,Operator'])->group(function () {
     Route::resource('customer', CustomerController::class);
     Route::resource('transaction', TransOrderController::class);
     Route::put('transaction/status/{id}', [TransOrderController::class, 'updateStatus'])->name('transaction.updateStatus');
     Route::get('/transaction/{id}/print', [\App\Http\Controllers\TransOrderController::class, 'printInvoice'])->name('transaction.print');
-    
+
     // Rute Pickup Laundry
     Route::get('pickup', [TransOrderController::class, 'pickupIndex'])->name('transaction.pickup.index');
     Route::get('pickup/{id}', [TransOrderController::class, 'pickupShow'])->name('transaction.pickup.show');
@@ -72,14 +75,14 @@ Route::middleware(['auth', 'role:Administrator,Operator'])->group(function () {
 // --------------------------------------------------------
 // 3. AKSES KHUSUS OWNER (PIMPINAN) & ADMINISTRATOR
 // --------------------------------------------------------
-Route::middleware(['auth', 'role:Administrator,Owner'])->group(function () {
+Route::middleware(['auth', 'prevent-back-history','role:Administrator,Owner'])->group(function () {
     Route::get('/report', [ReportController::class, 'index'])->name('report.index');
 });
 
 // --------------------------------------------------------
 // ROUTE PROFILE BAWAAN BREEZE
 // --------------------------------------------------------
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth', 'prevent-back-history'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');

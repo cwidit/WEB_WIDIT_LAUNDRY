@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no" name="viewport">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    
+
     <title>@yield('title', 'Widit Laundry') &mdash; Sistem Informasi</title>
 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
@@ -27,8 +27,8 @@
         }
 
         /* Change grey/muted text to navy */
-        .section-lead, 
-        .text-muted, 
+        .section-lead,
+        .text-muted,
         .text-secondary,
         .section-title {
             color: #1e3a8a !important;
@@ -63,7 +63,7 @@
         .main-sidebar .sidebar-menu li.dropdown .dropdown-menu li a:hover span {
             color: #0f172a !important; /* Darker navy hover color */
         }
-        
+
         .sidebar-menu li.menu-header {
             letter-spacing: 0.5px;
             font-weight: 700;
@@ -85,7 +85,7 @@
     <div id="app">
         <div class="main-wrapper">
             <div class="navbar-bg"></div>
-            
+
             <nav class="navbar navbar-expand-lg main-navbar">
                 <form class="form-inline mr-auto">
                     <ul class="navbar-nav mr-3">
@@ -102,7 +102,7 @@
                                 <i class="far fa-user"></i> Profil Saya
                             </a>
                             <div class="dropdown-divider"></div>
-                            
+
                             <form method="POST" action="{{ route('logout') }}">
                                 @csrf
                                 <button type="submit" class="dropdown-item has-icon text-danger d-flex align-items-center" style="cursor: pointer; background: transparent; border: none;">
@@ -122,7 +122,7 @@
                     <div class="sidebar-brand sidebar-brand-sm">
                         <a href="{{ route('dashboard') }}">WL</a>
                     </div>
-                    
+
                     <ul class="sidebar-menu">
                         @php
                             $role = optional(Auth::user()->level)->level_name;
@@ -154,7 +154,7 @@
                                 <a href="#" class="nav-link has-dropdown"><i class="fas fa-shopping-basket"></i> <span>Order</span></a>
                                 <ul class="dropdown-menu">
                                     <li class="{{ Request::is('transaction/create') ? 'active' : '' }}"><a class="nav-link" href="{{ route('transaction.create') }}">New Order</a></li>
-                                    <li class="{{ Request::is('transaction') ? 'active' : '' }}"><a class="nav-link" href="{{ route('transaction.index') }}">History Order</a></li>
+                                    {{-- <li class="{{ Request::is('transaction') ? 'active' : '' }}"><a class="nav-link" href="{{ route('transaction.index') }}">History Order</a></li> --}}
                                     <li class="{{ Request::is('pickup*') ? 'active' : '' }}"><a class="nav-link" href="{{ route('transaction.pickup.index') }}">Pickup Laundry</a></li>
                                 </ul>
                             </li>
@@ -187,7 +187,7 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.nicescroll/3.7.6/jquery.nicescroll.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
-    
+
     <script src="https://cdn.jsdelivr.net/npm/stisla@2.3.0/assets/js/stisla.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/stisla@2.3.0/assets/js/scripts.js"></script>
 </body>
